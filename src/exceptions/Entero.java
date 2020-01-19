@@ -5,8 +5,6 @@
  */
 package exceptions;
 
-import java.util.Arrays;
-
 /**
  *
  * @author chazy
@@ -14,6 +12,8 @@ import java.util.Arrays;
 public class Entero
 {
     public static boolean ok = false;
+    private static final String INT_MIN = (Integer.MIN_VALUE + "").replace("-", "");
+    private static final String INT_MAX = Integer.MAX_VALUE + "";
 
     public static int pedirEntero(String cadena)
     {
@@ -39,14 +39,19 @@ public class Entero
         int numero = 0;
         boolean negativo = false;
 
-        if (!cadena.isEmpty())
+        if (cadena.isEmpty())
+        {
+            throw new Exception("Debes introducir un número.\n");
+        }
+
+        else
         {
             // negative number
             if (cadena.charAt(0) == '-')
             {
                 cadena = cadena.replace("-", "");
 
-                if (cadena.length() >= 10 && cadena.compareTo((Integer.MIN_VALUE + "").replace("-", "")) > 0)
+                if (cadena.length() >= INT_MIN.length() && cadena.compareTo(INT_MIN) > 0)
                 {
                     throw new Exception("El número introducido excede el valor mínimo.\n");
                 }
@@ -56,7 +61,7 @@ public class Entero
             // positive number
             else
             {
-                if (cadena.length() >= 10 && cadena.compareTo(Integer.MAX_VALUE + "") > 0)
+                if (cadena.length() >= INT_MAX.length() && cadena.compareTo(INT_MAX) > 0)
                 {
                     throw new Exception("El número introducido excede el valor máximo.\n");
                 }
@@ -64,23 +69,17 @@ public class Entero
 
             char[] elementos = cadena.toCharArray();
 
-            Arrays.sort(elementos);
+            int num = 1, length = elementos.length;
 
-            for (int i = 0, j = elementos.length, z=j; i < j; i++,z--)
+            for (int i = 0; i < length; i++)
             {
-                char tmp = elementos[i];
+                char tmp = elementos[length - 1 - i];
 
                 if (tmp >= '0' && tmp <= '9')
                 {
-                    int num = 1;
-
-                    for (int k = z; k > 1; k--)
-                    {
-                        num *= 10;
-                    }
-
                     // x * 1, y * 10, z * 100, ...
-                    numero += Character.getNumericValue(tmp)*num;
+                    numero += Character.getNumericValue(tmp) * num;
+                    num *= 10;
                 }
 
                 else
@@ -94,13 +93,8 @@ public class Entero
                 numero *= -1;
             }
 
-            System.out.print("El número convertido es: " + numero);
+            System.out.println("El número convertido es: " + numero);
             ok = true;
-        }
-
-        else
-        {
-            throw new Exception("Debes introducir un número.\n");
         }
 
         return numero;
